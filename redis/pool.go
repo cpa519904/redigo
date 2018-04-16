@@ -471,6 +471,16 @@ func (ac *activeConn) Send(commandName string, args ...interface{}) error {
 	return pc.c.Send(commandName, args...)
 }
 
+func (ac *activeConn) SendNew(commandName string, args []interface{}) error {
+	pc := ac.pc
+	if pc == nil {
+		return errConnClosed
+	}
+	ci := internal.LookupCommandInfo(commandName)
+	ac.state = (ac.state | ci.Set) &^ ci.Clear
+	return pc.c.SendNew(commandName, args)
+}
+
 func (ac *activeConn) Flush() error {
 	pc := ac.pc
 	if pc == nil {
@@ -506,6 +516,7 @@ func (ec errorConn) DoWithTimeout(time.Duration, string, ...interface{}) (interf
 	return nil, ec.err
 }
 func (ec errorConn) Send(string, ...interface{}) error                     { return ec.err }
+func (ec errorConn) SendNew(string, []interface{}) error                     { return ec.err }
 func (ec errorConn) Err() error                                            { return ec.err }
 func (ec errorConn) Close() error                                          { return nil }
 func (ec errorConn) Flush() error                                          { return ec.err }

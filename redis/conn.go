@@ -570,6 +570,19 @@ func (c *conn) Send(cmd string, args ...interface{}) error {
 	return nil
 }
 
+func (c *conn) SendNew(cmd string, args []interface{}) error {
+	c.mu.Lock()
+	c.pending += 1
+	c.mu.Unlock()
+	if c.writeTimeout != 0 {
+		c.conn.SetWriteDeadline(time.Now().Add(c.writeTimeout))
+	}
+	if err := c.writeCommand(cmd, args); err != nil {
+		return c.fatal(err)
+	}
+	return nil
+}
+
 func (c *conn) Flush() error {
 	if c.writeTimeout != 0 {
 		c.conn.SetWriteDeadline(time.Now().Add(c.writeTimeout))
