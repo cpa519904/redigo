@@ -25,7 +25,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"redigo/internal"
+	"github.com/cpa519904/redigo/internal"
 )
 
 var (

@@ -18,8 +18,8 @@ import (
 	"errors"
 	"sync"
 
-	"redigo/internal"
-	"redigo/redis"
+	"github.com/cpa519904/redigo/internal"
+	"github.com/cpa519904/redigo/redis"
 )
 
 // ConnMux multiplexes one or more connections to a single underlying
