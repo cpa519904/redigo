@@ -38,6 +38,9 @@ type Conn interface {
 	// Send writes the command to the client's output buffer.
 	Send(commandName string, args ...interface{}) error
 
+	// Send writes the command to the client's output buffer.
+	SendNew(commandName string, args []interface{}) error
+
 	// Flush flushes the output buffer to the Redis server.
 	Flush() error
 
