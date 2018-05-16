@@ -110,7 +110,7 @@ func (c *loggingConn) Do(commandName string, args ...interface{}) (interface{}, 
 }
 
 
-func (c *loggingConn) DoNew(commandName string, args ...interface{}) (interface{}, error) {
+func (c *loggingConn) DoNew(commandName string, args []interface{}) (interface{}, error) {
 	reply, err := c.Conn.Do(commandName, args...)
 	c.print("DoNew", commandName, args, reply, err)
 	return reply, err
