@@ -538,7 +538,11 @@ func (ac *activeConn) ReceiveWithTimeout(timeout time.Duration) (reply interface
 type errorConn struct{ err error }
 
 func (ec errorConn) Do(string, ...interface{}) (interface{}, error) { return nil, ec.err }
+func (ec errorConn) DoNew(string, []interface{}) (interface{}, error) { return nil, ec.err }
 func (ec errorConn) DoWithTimeout(time.Duration, string, ...interface{}) (interface{}, error) {
+	return nil, ec.err
+}
+func (ec errorConn) DoWithTimeoutNew(time.Duration, string, []interface{}) (interface{}, error) {
 	return nil, ec.err
 }
 func (ec errorConn) Send(string, ...interface{}) error                     { return ec.err }
