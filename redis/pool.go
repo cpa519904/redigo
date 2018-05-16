@@ -447,6 +447,17 @@ func (ac *activeConn) Do(commandName string, args ...interface{}) (reply interfa
 	return pc.c.Do(commandName, args...)
 }
 
+
+func (ac *activeConn) DoNew(commandName string, args []interface{}) (reply interface{}, err error) {
+	pc := ac.pc
+	if pc == nil {
+		return nil, errConnClosed
+	}
+	ci := internal.LookupCommandInfo(commandName)
+	ac.state = (ac.state | ci.Set) &^ ci.Clear
+	return pc.c.Do(commandName, args...)
+}
+
 func (ac *activeConn) DoWithTimeout(timeout time.Duration, commandName string, args ...interface{}) (reply interface{}, err error) {
 	pc := ac.pc
 	if pc == nil {
@@ -459,6 +470,21 @@ func (ac *activeConn) DoWithTimeout(timeout time.Duration, commandName string, a
 	ci := internal.LookupCommandInfo(commandName)
 	ac.state = (ac.state | ci.Set) &^ ci.Clear
 	return cwt.DoWithTimeout(timeout, commandName, args...)
+}
+
+
+func (ac *activeConn) DoWithTimeoutNew(timeout time.Duration, commandName string, args []interface{}) (reply interface{}, err error) {
+	pc := ac.pc
+	if pc == nil {
+		return nil, errConnClosed
+	}
+	cwt, ok := pc.c.(DoWithTimeoutNew)
+	if !ok {
+		return nil, errTimeoutNotSupported
+	}
+	ci := internal.LookupCommandInfo(commandName)
+	ac.state = (ac.state | ci.Set) &^ ci.Clear
+	return cwt.DoWithTimeoutNew(timeout, commandName, args)
 }
 
 func (ac *activeConn) Send(commandName string, args ...interface{}) error {
