@@ -109,9 +109,22 @@ func (c *loggingConn) Do(commandName string, args ...interface{}) (interface{}, 
 	return reply, err
 }
 
+
+func (c *loggingConn) DoNew(commandName string, args ...interface{}) (interface{}, error) {
+	reply, err := c.Conn.Do(commandName, args...)
+	c.print("DoNew", commandName, args, reply, err)
+	return reply, err
+}
+
 func (c *loggingConn) DoWithTimeout(timeout time.Duration, commandName string, args ...interface{}) (interface{}, error) {
 	reply, err := DoWithTimeout(c.Conn, timeout, commandName, args...)
 	c.print("DoWithTimeout", commandName, args, reply, err)
+	return reply, err
+}
+
+func (c *loggingConn) DoWithTimeoutNew(timeout time.Duration, commandName string, args ...interface{}) (interface{}, error) {
+	reply, err := DoWithTimeout(c.Conn, timeout, commandName, args...)
+	c.print("DoWithTimeoutNew", commandName, args, reply, err)
 	return reply, err
 }
 
