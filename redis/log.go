@@ -122,8 +122,8 @@ func (c *loggingConn) DoWithTimeout(timeout time.Duration, commandName string, a
 	return reply, err
 }
 
-func (c *loggingConn) DoWithTimeoutNew(timeout time.Duration, commandName string, args ...interface{}) (interface{}, error) {
-	reply, err := DoWithTimeout(c.Conn, timeout, commandName, args...)
+func (c *loggingConn) DoWithTimeoutNew(timeout time.Duration, commandName string, args []interface{}) (interface{}, error) {
+	reply, err := DoWithTimeoutNew(c.Conn, timeout, commandName, args)
 	c.print("DoWithTimeoutNew", commandName, args, reply, err)
 	return reply, err
 }
@@ -131,6 +131,12 @@ func (c *loggingConn) DoWithTimeoutNew(timeout time.Duration, commandName string
 func (c *loggingConn) Send(commandName string, args ...interface{}) error {
 	err := c.Conn.Send(commandName, args...)
 	c.print("Send", commandName, args, nil, err)
+	return err
+}
+
+func (c *loggingConn) SendNew(commandName string, args []interface{}) error {
+	err := c.Conn.SendNew(commandName, args)
+	c.print("SendNew", commandName, args, nil, err)
 	return err
 }
 
