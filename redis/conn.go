@@ -630,7 +630,7 @@ func (c *conn) Do(cmd string, args ...interface{}) (interface{}, error) {
 }
 
 func (c *conn) DoNew(cmd string, args []interface{}) (interface{}, error) {
-	return c.DoWithTimeout(c.readTimeout, cmd, args...)
+	return c.DoWithTimeoutNew(c.readTimeout, cmd, args)
 }
 
 func (c *conn) DoWithTimeout(readTimeout time.Duration, cmd string, args ...interface{}) (interface{}, error) {

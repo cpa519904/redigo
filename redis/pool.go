@@ -478,7 +478,7 @@ func (ac *activeConn) DoWithTimeoutNew(timeout time.Duration, commandName string
 	if pc == nil {
 		return nil, errConnClosed
 	}
-	cwt, ok := pc.c.(DoWithTimeoutNew)
+	cwt, ok := pc.c.(ConnWithTimeout)
 	if !ok {
 		return nil, errTimeoutNotSupported
 	}

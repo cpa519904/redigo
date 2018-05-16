@@ -93,6 +93,11 @@ type ConnWithTimeout interface {
 	// connection.
 	DoWithTimeout(timeout time.Duration, commandName string, args ...interface{}) (reply interface{}, err error)
 
+	// Do sends a command to the server and returns the received reply.
+	// The timeout overrides the read timeout set when dialing the
+	// connection.
+	DoWithTimeoutNew(timeout time.Duration, commandName string, args []interface{}) (reply interface{}, err error)
+
 	// Receive receives a single reply from the Redis server. The timeout
 	// overrides the read timeout set when dialing the connection.
 	ReceiveWithTimeout(timeout time.Duration) (reply interface{}, err error)
@@ -109,6 +114,16 @@ func DoWithTimeout(c Conn, timeout time.Duration, cmd string, args ...interface{
 		return nil, errTimeoutNotSupported
 	}
 	return cwt.DoWithTimeout(timeout, cmd, args...)
+}
+// DoWithTimeout executes a Redis command with the specified read timeout. If
+// the connection does not satisfy the ConnWithTimeout interface, then an error
+// is returned.
+func DoWithTimeoutNew(c Conn, timeout time.Duration, cmd string, args []interface{}) (interface{}, error) {
+	cwt, ok := c.(ConnWithTimeout)
+	if !ok {
+		return nil, errTimeoutNotSupported
+	}
+	return cwt.DoWithTimeoutNew(timeout, cmd, args)
 }
 
 // ReceiveWithTimeout receives a reply with the specified read timeout. If the
